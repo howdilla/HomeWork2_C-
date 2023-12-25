@@ -1,0 +1,119 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+void fillArray(int** arr, int line, int col) { // случайное число от 10 до 50
+    for (int i = 0; i < line; i++) {
+        for (int j = 0; j < col; j++) {
+            arr[i][j] = rand() % 41 + 10; //в кажду ячейку массива скалдываем случайное число
+        }
+    }
+}
+
+void printArray(int** arr, int line, int col) { //функция вывода массива
+    for (int i = 0; i < line; i++) {
+        for (int j = 0; j < col; j++) {
+            std::cout << arr[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+int printSum(int first, int second) //функция суммы
+{
+    return first + second;
+}
+
+int printDiff(int first, int second) //функция минуса
+{
+    return first - second;
+}
+
+int printMult(int first, int second) //функция умножения
+{
+    return first * second;
+}
+
+int printDiv(int first, int second) //функция деления
+{
+    if (second == 0) 
+    {
+        std::cout << "Error, second Number = 0" << std::endl;
+        return 0;
+    } else {
+        return first/second;
+    }
+}
+
+
+
+int main()
+{
+    {
+        std::cout << "Task #4" << std::endl;
+        /* №4 */
+        int lines = 0; //создаём и инициализируем переменную под строки
+        int columns = 0; //создаём и инициализируем переменную под столбцы
+        std::cout << "Enter lines: ";
+        std::cin >> lines; //считываем строки
+        std::cout << "Enter colimns: ";
+        std::cin >> columns; //считываем столбцы
+
+        int** array = new int* [lines]; /*создаём двумерный динамический массив*/
+        for (int i = 0; i < lines; i++) {
+            array[i] = new int[columns];
+        }
+
+        srand(time(0)); //инициализация генератора случайных чисел
+
+        fillArray(array, lines, columns); //функция генерации случ чисел(наполняяем массив)
+        std::cout << "Array: " << std::endl;
+        printArray(array, lines, columns); //функция вывода массив(печатаем массив)
+
+        //освобождение памяти
+        for (int i = 0; i < lines; i++) {
+            delete[] array[i];
+        }
+        delete[] array;
+    }
+
+    {
+        std::cout << "Task #5" << std::endl;
+        /* №5 */
+        int firstNumber = 0; //создаём и инциализируем параметр 1
+        int secondNumber = 0; //создаём и инциализируем параметр 2
+        std::cout << "Enter x: " << std::endl;
+        std::cin >> firstNumber; //считываем параметр 1
+        std::cout << "Enter y: " << std::endl;
+        std::cin >> secondNumber; //считываем параметр 2
+        typedef int (*ArithmeticFunction)(int, int); //создаём "псеводним" указателя на функцию
+        ArithmeticFunction func; //объявляем переменную func с типом rithmeticFunction, чтобы присваивать адреса функций 
+        char action = '+'; //создаём и инициализируем некоторый символ операции
+        std::cout << "Enter action: " << std::endl;
+        while (std::cin >> action && action != ' ') //по условию пока user не введёт пробел программа работает
+        {
+            switch (action)
+            {
+                case '+': //для операции сложения
+                    func = &printSum;
+                    break;
+                case '-': //для операции вычитания
+                    func = &printDiff;
+                    break;
+                case '*': //для операции умножения
+                    func = &printMult;
+                    break;
+                case '/': //для операции деления
+                    func = &printDiv;
+                    break;
+                default: //в случае неверно введённого символа
+                    std::cout << "Error" << std::endl;
+                    continue;
+            }
+            std::cout << func(firstNumber, secondNumber) << std::endl; //выводим значения указателя
+            std::cout << "Enter action: "; //продолжаем вводить действия
+        }
+        std::cout << "End of programm" << std::endl;
+    }
+    return 0;
+}
